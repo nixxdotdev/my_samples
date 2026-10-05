@@ -1,0 +1,27 @@
+{
+  "name": "NixxdotdevAPI",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "nixxdotdev",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "config": "^5.0.1",
+    "cors": "^2.8.6",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^9.0.3",
+    "moment": "^2.31.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  title: Modular Express API
+  version: 1.0.0
+  description: API documentation split into multiple YAML files.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+# Group endpoints into visual sections in Swagger UI
+tags:
+  - name: Users
+    description: Operations related to user management
+  - name: Products
+    description: Operations related to product inventory
