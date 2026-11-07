@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sample_flow/core/constants/app_colors.dart';
 import 'package:sample_flow/features/notifications/presentation/widgets/notification_card.dart';
 import 'package:sample_flow/features/samples/data/api/sample_api.dart';
@@ -120,27 +121,52 @@ class _NotificationsBottomSheetState extends State<NotificationsBottomSheet> {
 
           // Notifications List
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 14,
-              ),
-              physics: const BouncingScrollPhysics(),
-              itemCount: notifications.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = notifications[index];
-                return NotificationCard(
-                  item: item,
-                  onTap: () {
-                    setState(() {
-                      SampleApi().markNotificationAsRead(item.id);
-                    });
-                    widget.onUpdated?.call();
-                  },
-                );
-              },
-            ),
+            child: notifications.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            LucideIcons.bellOff,
+                            size: 40,
+                            color: AppColors.textMuted.withValues(alpha: 0.5),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No notifications yet',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 14,
+                    ),
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: notifications.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final item = notifications[index];
+                      return NotificationCard(
+                        item: item,
+                        onTap: () {
+                          setState(() {
+                            SampleApi().markNotificationAsRead(item.id);
+                          });
+                          widget.onUpdated?.call();
+                        },
+                      );
+                    },
+                  ),
           ),
         ],
       ),

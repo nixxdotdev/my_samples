@@ -1,205 +1,172 @@
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
+import 'package:flutter/foundation.dart';
+import 'package:sample_flow/core/network/api_client.dart';
+import 'package:sample_flow/core/network/api_endpoints.dart';
+import 'package:sample_flow/core/network/api_exception.dart';
+import 'package:sample_flow/core/storage/local_storage_service.dart';
 import 'package:sample_flow/features/samples/data/models/notification_item.dart';
 import 'package:sample_flow/features/samples/data/models/sample_item.dart';
 import 'package:sample_flow/features/samples/data/models/sample_status.dart';
 
-/// Temporary in-memory API & mock data store.
-/// This houses the hardcoded samples and notifications before backend integration.
-class SampleApi {
-  // Singleton pattern for seamless state sharing across presentation widgets
+/// Offline-First Sample & Notification API Repository.
+/// Combines local persistent disk storage (via SharedPreferences) with
+/// remote REST API synchronization (via Dio ApiClient).
+/// All actual data is sourced from and synchronized with the backend API.
+class SampleApi extends ChangeNotifier {
   static final SampleApi _instance = SampleApi._internal();
   factory SampleApi() => _instance;
   SampleApi._internal();
 
-  final List<NotificationItem> _notifications = [
-    NotificationItem(
-      id: 'n1',
-      title: 'Sample Review Due in 2 Days!',
-      description:
-          'Your video post for Wireless ANC Headphones is due before Oct 12, 11:59 PM.',
-      timeAgo: '25m ago',
-      icon: LucideIcons.alertCircle,
-      iconColor: AppColors.critical,
-      iconBgColor: AppColors.critical.withValues(alpha: 0.12),
-      isRead: false,
-    ),
-    NotificationItem(
-      id: 'n2',
-      title: 'Sample Request Approved',
-      description:
-          'Merchant approved your request for Hydrating Peptide Glow Serum. Delivery in progress.',
-      timeAgo: '2h ago',
-      icon: LucideIcons.checkCircle,
-      iconColor: AppColors.approved,
-      iconBgColor: AppColors.approved.withValues(alpha: 0.12),
-      isRead: false,
-    ),
-    NotificationItem(
-      id: 'n3',
-      title: 'Sample Package Dispatched',
-      description:
-          'Custom Mechanical Keyboard has shipped via J&T Express (Tracking #TK-98421).',
-      timeAgo: '5h ago',
-      icon: LucideIcons.package,
-      iconColor: AppColors.primary,
-      iconBgColor: AppColors.primary.withValues(alpha: 0.12),
-      isRead: false,
-    ),
-    NotificationItem(
-      id: 'n4',
-      title: 'Posting Criteria Guidelines',
-      description:
-          'Please ensure the official TikTok Shop product anchor tag is linked in your video caption.',
-      timeAgo: '1d ago',
-      icon: LucideIcons.fileText,
-      iconColor: AppColors.pending,
-      iconBgColor: AppColors.pending.withValues(alpha: 0.12),
-      isRead: true,
-    ),
-    NotificationItem(
-      id: 'n5',
-      title: 'New Brand Collaboration Offer',
-      description:
-          'A brand invited you to request a free Creator Magnetic Ring Light sample.',
-      timeAgo: '2d ago',
-      icon: LucideIcons.sparkles,
-      iconColor: AppColors.primaryLight,
-      iconBgColor: AppColors.primaryLight.withValues(alpha: 0.15),
-      isRead: true,
-    ),
-  ];
+  final LocalStorageService _storage = LocalStorageService();
+  final ApiClient _client = ApiClient();
 
-  final List<SampleItem> _samples = [
-    // 1. Pending Approval
-    SampleItem(
-      id: '1',
-      title: 'Wireless ANC Noise-Cancelling Headphones',
-      category: 'Electronics & Audio',
-      remainingDays: 0,
-      totalDays: 0,
-      icon: LucideIcons.headphones,
-      status: SampleStatus.pendingApproval,
-    ),
-    SampleItem(
-      id: '2',
-      title: 'Hydrating Peptide Glow Serum & Mist',
-      category: 'Beauty & Skincare',
-      remainingDays: 0,
-      totalDays: 0,
-      icon: LucideIcons.sparkles,
-      status: SampleStatus.pendingApproval,
-    ),
-    SampleItem(
-      id: '3',
-      title: 'Oversized Heavyweight Vintage Boxy Tee',
-      category: 'Apparel & Fashion',
-      remainingDays: 0,
-      totalDays: 0,
-      icon: LucideIcons.shirt,
-      status: SampleStatus.pendingApproval,
-    ),
-    SampleItem(
-      id: '4',
-      title: 'Portable Cold Brew & Espresso Tumbler Maker',
-      category: 'Home & Kitchen',
-      remainingDays: 0,
-      totalDays: 0,
-      icon: LucideIcons.coffee,
-      status: SampleStatus.pendingApproval,
-    ),
+  bool _isInitialized = false;
+  bool _isOffline = false;
 
-    // 2. Approved Samples
-    SampleItem(
-      id: '5',
-      title: 'Smart Health & Sleep Tracker Fitness Band',
-      category: 'Gadgets & Fitness',
-      remainingDays: 5,
-      totalDays: 14,
-      icon: LucideIcons.watch,
-      status: SampleStatus.approved,
-    ),
-    SampleItem(
-      id: '6',
-      title: 'Custom Hot-Swappable Mechanical Keyboard',
-      category: 'Computer & Office',
-      remainingDays: 7,
-      totalDays: 14,
-      icon: LucideIcons.keyboard,
-      status: SampleStatus.approved,
-    ),
-    SampleItem(
-      id: '7',
-      title: 'Vitamin C Brightening Daily Cleanser Foam',
-      category: 'Personal Care',
-      remainingDays: 8,
-      totalDays: 14,
-      icon: LucideIcons.droplets,
-      status: SampleStatus.approved,
-    ),
-    SampleItem(
-      id: '8',
-      title: 'Creator Magnetic Ring Light & Tripod Stand',
-      category: 'Creator Studio Gear',
-      remainingDays: 10,
-      totalDays: 14,
-      icon: LucideIcons.camera,
-      status: SampleStatus.approved,
-    ),
+  bool get isOffline => _isOffline;
+  DateTime? get lastSyncTime => _storage.getLastSync();
+  String get currentBaseUrl => _storage.getBackendUrl();
 
-    // 3. Pending Criteria / Posted
-    SampleItem(
-      id: '9',
-      title: 'Minimalist RFID Slim Leather Card Wallet',
-      category: 'Accessories & Travel',
-      remainingDays: 12,
-      totalDays: 14,
-      icon: LucideIcons.wallet,
-      status: SampleStatus.pendingCriteria,
-    ),
-    SampleItem(
-      id: '10',
-      title: 'MagSafe Fast Wireless Power Bank 10000mAh',
-      category: 'Mobile & Tech',
-      remainingDays: 14,
-      totalDays: 14,
-      icon: LucideIcons.smartphone,
-      status: SampleStatus.pendingCriteria,
-    ),
-    SampleItem(
-      id: '11',
-      title: 'Matte Ceramic Pour-Over Coffee Dripper',
-      category: 'Home & Kitchen',
-      remainingDays: 6,
-      totalDays: 14,
-      icon: LucideIcons.coffee,
-      status: SampleStatus.pendingCriteria,
-    ),
-    SampleItem(
-      id: '12',
-      title: 'Ergonomic Memory Foam Keyboard Wrist Rest',
-      category: 'Computer & Office',
-      remainingDays: 9,
-      totalDays: 14,
-      icon: LucideIcons.keyboard,
-      status: SampleStatus.pendingCriteria,
-    ),
-  ];
+  Future<void> updateBackendUrl(String newUrl) async {
+    await _storage.saveBackendUrl(newUrl);
+    _client.updateBaseUrl(newUrl);
+    await syncWithBackend();
+    notifyListeners();
+  }
+
+  // In-memory active stores (populated from local disk cache or remote backend)
+  final List<SampleItem> _samples = [];
+  final List<NotificationItem> _notifications = [];
+
+  /// Initialize local persistence and hydrate in-memory stores.
+  /// Also triggers background sync if remote backend is accessible.
+  Future<void> init() async {
+    if (_isInitialized) return;
+
+    await _storage.init();
+
+    // 1. Load Samples from disk cache if present
+    final cachedSamplesJson = _storage.getCachedSamples();
+    if (cachedSamplesJson != null && cachedSamplesJson.isNotEmpty) {
+      _samples.clear();
+      _samples.addAll(
+        cachedSamplesJson.map((json) => SampleItem.fromJson(json)),
+      );
+    } else {
+      _samples.clear();
+    }
+
+    // 2. Load Notifications from disk cache if present
+    final cachedNotifsJson = _storage.getCachedNotifications();
+    if (cachedNotifsJson != null && cachedNotifsJson.isNotEmpty) {
+      _notifications.clear();
+      _notifications.addAll(
+        cachedNotifsJson.map((json) => NotificationItem.fromJson(json)),
+      );
+    } else {
+      _notifications.clear();
+    }
+
+    _isInitialized = true;
+    notifyListeners();
+
+    // 3. Background sync with remote backend (non-blocking)
+    syncWithBackend();
+  }
+
+  /// Persist current samples to disk cache via SharedPreferences
+  Future<void> _persistSamplesToDisk() async {
+    final list = _samples.map((s) => s.toJson()).toList();
+    await _storage.saveSamples(list);
+  }
+
+  /// Persist current notifications to disk cache via SharedPreferences
+  Future<void> _persistNotificationsToDisk() async {
+    final list = _notifications.map((n) => n.toJson()).toList();
+    await _storage.saveNotifications(list);
+  }
+
+  /// Synchronize both samples and notifications with remote backend
+  Future<void> syncWithBackend() async {
+    try {
+      await Future.wait([
+        fetchSamplesFromRemote(),
+        fetchNotificationsFromRemote(),
+      ]);
+      _isOffline = false;
+      await _storage.setLastSync(DateTime.now());
+      debugPrint('[SampleApi] Synchronized successfully with remote backend.');
+    } catch (e) {
+      _isOffline = true;
+      debugPrint(
+        '[SampleApi] Remote backend unreachable, operating in offline/cached mode: $e',
+      );
+    }
+    notifyListeners();
+  }
+
+  @visibleForTesting
+  void resetForTesting() {
+    _isInitialized = false;
+    _samples.clear();
+    _notifications.clear();
+    notifyListeners();
+  }
 
   // ================= SAMPLES API =================
 
-  List<SampleItem> getSamples() => _samples;
+  /// Synchronous getter returning local in-memory samples for instant UI rendering
+  List<SampleItem> getSamples() => List.unmodifiable(_samples);
 
-  void addSample(SampleItem item) {
-    _samples.insert(0, item);
+  /// Fetch latest samples from remote backend
+  Future<List<SampleItem>> fetchSamplesFromRemote() async {
+    final response = await _client.get(ApiEndpoints.samples);
+    if (response.statusCode == 200 && response.data is List) {
+      final remoteItems = (response.data as List)
+          .map((e) => SampleItem.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+
+      _samples.clear();
+      _samples.addAll(remoteItems);
+      await _persistSamplesToDisk();
+      _isOffline = false;
+      notifyListeners();
+      return _samples;
+    }
+    throw ApiException(message: 'Invalid response from samples endpoint');
   }
 
-  void updateSampleStatus(
+  /// Add a new sample: immediately saves to local cache, then syncs with remote API
+  Future<void> addSample(SampleItem item) async {
+    _samples.insert(0, item);
+    await _persistSamplesToDisk();
+    notifyListeners();
+
+    // Fire and forget remote POST
+    _syncAddSampleRemote(item);
+  }
+
+  Future<void> _syncAddSampleRemote(SampleItem item) async {
+    try {
+      await _client.post(
+        ApiEndpoints.samples,
+        data: item.toJson(),
+      );
+      _isOffline = false;
+    } catch (e) {
+      debugPrint(
+        '[SampleApi] Remote add sample failed (stored locally in cache): $e',
+      );
+      _isOffline = true;
+    }
+  }
+
+  /// Update sample status & days: immediately saves to local cache, then syncs with remote API
+  Future<void> updateSampleStatus(
     String id,
     SampleStatus status, {
     int? remainingDays,
     int? totalDays,
-  }) {
+  }) async {
     final index = _samples.indexWhere((item) => item.id == id);
     if (index != -1) {
       _samples[index].status = status;
@@ -209,6 +176,30 @@ class SampleApi {
       if (totalDays != null) {
         _samples[index].totalDays = totalDays;
       }
+      await _persistSamplesToDisk();
+      notifyListeners();
+
+      // Fire and forget remote status update
+      _syncUpdateSampleStatusRemote(_samples[index]);
+    }
+  }
+
+  Future<void> _syncUpdateSampleStatusRemote(SampleItem item) async {
+    try {
+      await _client.patch(
+        ApiEndpoints.sampleStatus(item.id),
+        data: {
+          'status': item.status.name,
+          'remainingDays': item.remainingDays,
+          'totalDays': item.totalDays,
+        },
+      );
+      _isOffline = false;
+    } catch (e) {
+      debugPrint(
+        '[SampleApi] Remote status update failed (saved locally): $e',
+      );
+      _isOffline = true;
     }
   }
 
@@ -221,7 +212,31 @@ class SampleApi {
 
   // ================= NOTIFICATIONS API =================
 
-  List<NotificationItem> getNotifications() => _notifications;
+  /// Synchronous getter returning local notifications
+  List<NotificationItem> getNotifications() =>
+      List.unmodifiable(_notifications);
+
+  /// Fetch latest notifications from remote backend
+  Future<List<NotificationItem>> fetchNotificationsFromRemote() async {
+    final response = await _client.get(ApiEndpoints.notifications);
+    if (response.statusCode == 200 && response.data is List) {
+      final remoteNotifs = (response.data as List)
+          .map(
+            (e) => NotificationItem.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
+          .toList();
+
+      _notifications.clear();
+      _notifications.addAll(remoteNotifs);
+      await _persistNotificationsToDisk();
+      _isOffline = false;
+      notifyListeners();
+      return _notifications;
+    }
+    throw ApiException(message: 'Invalid response from notifications endpoint');
+  }
 
   bool hasUnreadNotifications() =>
       _notifications.any((item) => !item.isRead);
@@ -230,12 +245,34 @@ class SampleApi {
     for (var n in _notifications) {
       n.isRead = true;
     }
+    _persistNotificationsToDisk();
+    notifyListeners();
+
+    // Sync with remote (fire and forget)
+    () async {
+      try {
+        await _client.patch(ApiEndpoints.markAllNotificationsRead);
+      } catch (e) {
+        debugPrint('[SampleApi] Remote mark all read error: $e');
+      }
+    }();
   }
 
   void markNotificationAsRead(String id) {
     final index = _notifications.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notifications[index].isRead = true;
+      _persistNotificationsToDisk();
+      notifyListeners();
+
+      // Sync with remote (fire and forget)
+      () async {
+        try {
+          await _client.patch(ApiEndpoints.markNotificationRead(id));
+        } catch (e) {
+          debugPrint('[SampleApi] Remote mark notification read error: $e');
+        }
+      }();
     }
   }
 }

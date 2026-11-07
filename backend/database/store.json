@@ -1,0 +1,161 @@
+{
+  "samples": [
+    {
+      "id": "1",
+      "title": "Wireless ANC Noise-Cancelling Headphones",
+      "category": "Electronics & Audio",
+      "remainingDays": 0,
+      "totalDays": 0,
+      "status": "pendingApproval",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "2",
+      "title": "Hydrating Peptide Glow Serum & Mist",
+      "category": "Beauty & Skincare",
+      "remainingDays": 0,
+      "totalDays": 0,
+      "status": "pendingApproval",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "3",
+      "title": "Oversized Heavyweight Vintage Boxy Tee",
+      "category": "Apparel & Fashion",
+      "remainingDays": 0,
+      "totalDays": 0,
+      "status": "pendingApproval",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "4",
+      "title": "Portable Cold Brew & Espresso Tumbler Maker",
+      "category": "Home & Kitchen",
+      "remainingDays": 0,
+      "totalDays": 0,
+      "status": "pendingApproval",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "5",
+      "title": "Smart Health & Sleep Tracker Fitness Band",
+      "category": "Gadgets & Fitness",
+      "remainingDays": 5,
+      "totalDays": 14,
+      "status": "approved",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "6",
+      "title": "Custom Hot-Swappable Mechanical Keyboard",
+      "category": "Computer & Office",
+      "remainingDays": 7,
+      "totalDays": 14,
+      "status": "approved",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "7",
+      "title": "Vitamin C Brightening Daily Cleanser Foam",
+      "category": "Personal Care",
+      "remainingDays": 8,
+      "totalDays": 14,
+      "status": "approved",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "8",
+      "title": "Creator Magnetic Ring Light & Tripod Stand",
+      "category": "Creator Studio Gear",
+      "remainingDays": 10,
+      "totalDays": 14,
+      "status": "approved",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "9",
+      "title": "Minimalist RFID Slim Leather Card Wallet",
+      "category": "Accessories & Travel",
+      "remainingDays": 12,
+      "totalDays": 14,
+      "status": "pendingCriteria",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "10",
+      "title": "MagSafe Fast Wireless Power Bank 10000mAh",
+      "category": "Mobile & Tech",
+      "remainingDays": 14,
+      "totalDays": 14,
+      "status": "pendingCriteria",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "11",
+      "title": "Matte Ceramic Pour-Over Coffee Dripper",
+      "category": "Home & Kitchen",
+      "remainingDays": 6,
+      "totalDays": 14,
+      "status": "pendingCriteria",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "12",
+      "title": "Ergonomic Memory Foam Keyboard Wrist Rest",
+      "category": "Computer & Office",
+      "remainingDays": 9,
+      "totalDays": 14,
+      "status": "pendingCriteria",
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "n1",
+      "title": "Sample Review Due in 2 Days!",
+      "description": "Your video post for Wireless ANC Headphones is due before Oct 12, 11:59 PM.",
+      "timeAgo": "25m ago",
+      "type": "urgent",
+      "isRead": true,
+      "createdAt": "2026-11-07T04:51:25.657Z",
+      "updatedAt": "2026-11-07T04:51:25.751Z"
+    },
+    {
+      "id": "n2",
+      "title": "Sample Request Approved",
+      "description": "Merchant approved your request for Hydrating Peptide Glow Serum. Delivery in progress.",
+      "timeAgo": "2h ago",
+      "type": "approved",
+      "isRead": true,
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "n3",
+      "title": "Sample Package Dispatched",
+      "description": "Custom Mechanical Keyboard has shipped via J&T Express (Tracking #TK-98421).",
+      "timeAgo": "5h ago",
+      "type": "shipping",
+      "isRead": true,
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "n4",
+      "title": "Posting Criteria Guidelines",
+      "description": "Please ensure the official TikTok Shop product anchor tag is linked in your video caption.",
+      "timeAgo": "1d ago",
+      "type": "guidelines",
+      "isRead": true,
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    },
+    {
+      "id": "n5",
+      "title": "New Brand Collaboration Offer",
+      "description": "A brand invited you to request a free Creator Magnetic Ring Light sample.",
+      "timeAgo": "2d ago",
+      "type": "offer",
+      "isRead": true,
+      "createdAt": "2026-11-07T04:51:25.657Z"
+    }
+  ],
+  "updatedAt": "2026-11-07T04:51:25.758Z"
+}

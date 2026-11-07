@@ -2,11 +2,157 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:sample_flow/core/constants/app_colors.dart';
+import 'package:sample_flow/core/network/api_client.dart';
 import 'package:sample_flow/features/about/presentation/widgets/about_feature_row.dart';
+import 'package:sample_flow/features/samples/data/api/sample_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
+
+  void _showBackendConfigDialog(BuildContext context) {
+    final sampleApi = SampleApi();
+    final controller = TextEditingController(text: sampleApi.currentBaseUrl);
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        bool isChecking = false;
+        String? checkResult;
+        bool? isSuccess;
+
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Row(
+                children: [
+                  const Icon(LucideIcons.server, color: AppColors.primary, size: 22),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Backend API URL',
+                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Configure the REST backend server endpoint for synchronization:',
+                    style: GoogleFonts.dmSans(fontSize: 13, color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      hintText: 'http://localhost:3000',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: const Icon(LucideIcons.globe, size: 18),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      ActionChip(
+                        label: const Text('localhost:3000'),
+                        onPressed: () {
+                          controller.text = 'http://localhost:3000';
+                        },
+                      ),
+                      ActionChip(
+                        label: const Text('10.0.2.2:3000 (Android)'),
+                        onPressed: () {
+                          controller.text = 'http://10.0.2.2:3000';
+                        },
+                      ),
+                    ],
+                  ),
+                  if (checkResult != null) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(
+                          isSuccess == true ? LucideIcons.checkCircle : LucideIcons.alertCircle,
+                          size: 16,
+                          color: isSuccess == true ? AppColors.approved : AppColors.critical,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            checkResult!,
+                            style: GoogleFonts.dmSans(
+                              fontSize: 12.5,
+                              color: isSuccess == true ? AppColors.approved : AppColors.critical,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isChecking
+                      ? null
+                      : () async {
+                          setDialogState(() {
+                            isChecking = true;
+                            checkResult = 'Testing connection...';
+                            isSuccess = null;
+                          });
+                          final trimmedUrl = controller.text.trim();
+                          ApiClient().updateBaseUrl(trimmedUrl);
+                          final ok = await ApiClient().checkHealth();
+                          setDialogState(() {
+                            isChecking = false;
+                            isSuccess = ok;
+                            checkResult = ok
+                                ? 'Server reachable & online!'
+                                : 'Cannot reach server at this address.';
+                          });
+                        },
+                  child: const Text('Test Connection'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () async {
+                    final trimmed = controller.text.trim();
+                    if (trimmed.isNotEmpty) {
+                      await sampleApi.updateBackendUrl(trimmed);
+                      if (context.mounted) {
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Backend URL updated: $trimmed'),
+                            backgroundColor: AppColors.primary,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Save & Sync', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   Future<void> _launchPortfolioUrl(BuildContext context) async {
     final Uri url = Uri.parse('https://nixxdotdev.vercel.app');
@@ -50,10 +196,7 @@ class AboutScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: AppColors.border,
-                width: 1.5,
-              ),
+              border: Border.all(color: AppColors.border, width: 1.5),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primary.withValues(alpha: 0.14),
@@ -81,7 +224,7 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 4),
           // Subtitle
           Text(
-            'TikTok Shop Creator Sample Tracker',
+            'Affiliator Sample Tracker',
             textAlign: TextAlign.center,
             style: GoogleFonts.dmSans(
               fontSize: 13.5,
@@ -216,35 +359,134 @@ class AboutScreen extends StatelessWidget {
                   icon: LucideIcons.clock,
                   iconColor: AppColors.critical,
                   title: 'Deadline Urgency Radar',
-                  description:
-                      'Color-coded urgency alerts (Critical <= 2 days, Warning 3-5 days, Safe 6+ days).',
+                  description: 'Color-coded urgency alerts (Critical <= 2 days, Warning 3-5 days, Safe 6+ days).',
                 ),
                 const SizedBox(height: 12),
                 const AboutFeatureRow(
                   icon: LucideIcons.checkCircle,
                   iconColor: AppColors.approved,
                   title: '3-Stage Sample Lifecycle',
-                  description:
-                      'Track items seamlessly across Pending Approval, Approved Samples, and Posted content.',
+                  description: 'Track items seamlessly across Pending Approval, Approved Samples, and Posted content.',
                 ),
                 const SizedBox(height: 12),
                 const AboutFeatureRow(
                   icon: LucideIcons.bell,
                   iconColor: AppColors.primary,
                   title: 'Smart Notification Hub',
-                  description:
-                      'Instant status updates for merchant approvals, package tracking, and posting criteria.',
+                  description: 'Instant status updates for merchant approvals, package tracking, and posting criteria.',
                 ),
                 const SizedBox(height: 12),
                 const AboutFeatureRow(
                   icon: LucideIcons.fileText,
                   iconColor: AppColors.posting,
                   title: 'Creator Compliance',
-                  description:
-                      'Never lose affiliate sample privileges due to overdue or unposted product reviews.',
+                  description: 'Never lose affiliate sample privileges due to overdue or unposted product reviews.',
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 16),
+
+          // Backend Server Connection Card
+          ListenableBuilder(
+            listenable: SampleApi(),
+            builder: (context, _) {
+              final sampleApi = SampleApi();
+              final isOffline = sampleApi.isOffline;
+              final baseUrl = sampleApi.currentBaseUrl;
+
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppColors.border, width: 1.2),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(LucideIcons.server, color: AppColors.primary, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Backend API Server',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: (isOffline ? AppColors.warning : AppColors.approved)
+                                .withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isOffline ? AppColors.warning : AppColors.approved,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                isOffline ? 'Offline Cache' : 'Live Sync',
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: isOffline ? AppColors.warning : AppColors.approved,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      baseUrl,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 12.5,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          side: const BorderSide(color: AppColors.border),
+                        ),
+                        onPressed: () => _showBackendConfigDialog(context),
+                        icon: const Icon(LucideIcons.settings2, size: 16, color: AppColors.primary),
+                        label: Text(
+                          'Configure Server URL',
+                          style: GoogleFonts.dmSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           const SizedBox(height: 24),
 

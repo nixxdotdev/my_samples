@@ -1,0 +1,21 @@
+/api/analytics/summary:
+  get:
+    tags:
+      - Analytics
+    summary: Retrieve creator sample analytics counts
+    responses:
+      "200":
+        description: Summary counts of pending, approved, and posted samples
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyticsSummary"
+
+/api/health:
+  get:
+    tags:
+      - Health
+    summary: Check API server health
+    responses:
+      "200":
+        description: Server is online and healthy

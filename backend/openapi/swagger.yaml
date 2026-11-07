@@ -1,16 +1,128 @@
 openapi: 3.0.0
 info:
-  title: Modular Express API
+  title: SampleFlow Creator API
   version: 1.0.0
-  description: API documentation split into multiple YAML files.
+  description: RESTful backend API for TikTok Shop Creator & Affiliate Sample Management.
 
 servers:
   - url: http://localhost:3000
     description: Local development server
 
-# Group endpoints into visual sections in Swagger UI
 tags:
-  - name: Users
-    description: Operations related to user management
-  - name: Products
-    description: Operations related to product inventory
+  - name: Samples
+    description: Operations related to creator sample requests and lifecycle tracking
+  - name: Notifications
+    description: Creator activity notifications and reminders
+  - name: Analytics
+    description: Metrics and summary counts
+  - name: Health
+    description: Server health and status
+
+components:
+  schemas:
+    Sample:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        title:
+          type: string
+          example: "Wireless ANC Noise-Cancelling Headphones"
+        category:
+          type: string
+          example: "Electronics & Audio"
+        remainingDays:
+          type: integer
+          example: 5
+        totalDays:
+          type: integer
+          example: 14
+        status:
+          type: string
+          enum: [pendingApproval, approved, pendingCriteria]
+          example: "approved"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    SampleInput:
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          type: string
+          example: "13"
+        title:
+          type: string
+          example: "RGB Studio Boom Arm"
+        category:
+          type: string
+          example: "Creator Studio Gear"
+        remainingDays:
+          type: integer
+          example: 7
+        totalDays:
+          type: integer
+          example: 14
+        status:
+          type: string
+          enum: [pendingApproval, approved, pendingCriteria]
+          example: "pendingApproval"
+
+    SampleStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pendingApproval, approved, pendingCriteria]
+          example: "approved"
+        remainingDays:
+          type: integer
+          example: 10
+        totalDays:
+          type: integer
+          example: 14
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "n1"
+        title:
+          type: string
+          example: "Sample Review Due in 2 Days!"
+        description:
+          type: string
+          example: "Your video post is due soon."
+        timeAgo:
+          type: string
+          example: "25m ago"
+        type:
+          type: string
+          enum: [urgent, approved, shipping, guidelines, offer, info]
+          example: "urgent"
+        isRead:
+          type: boolean
+          example: false
+
+    AnalyticsSummary:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 12
+        pendingCount:
+          type: integer
+          example: 4
+        approvedCount:
+          type: integer
+          example: 4
+        postedCount:
+          type: integer
+          example: 4

@@ -100,13 +100,31 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                             color: statusColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Icon(
-                            _selectedStatus == null
-                                ? LucideIcons.helpCircle
-                                : LucideIcons.plusCircle,
-                            color: statusColor,
-                            size: 20,
-                          ),
+                          child: _selectedStatus != null
+                              ? Tooltip(
+                                  message: 'Back to selection',
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(10),
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedStatus = null;
+                                        });
+                                      },
+                                      child: Icon(
+                                        LucideIcons.arrowLeft,
+                                        color: statusColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Icon(
+                                  LucideIcons.helpCircle,
+                                  color: statusColor,
+                                  size: 20,
+                                ),
                         ),
                         const SizedBox(width: 10),
                         Text(

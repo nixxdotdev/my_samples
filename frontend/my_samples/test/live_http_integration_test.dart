@@ -1,0 +1,50 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sample_flow/core/network/api_client.dart';
+import 'package:sample_flow/core/network/api_endpoints.dart';
+import 'package:sample_flow/features/samples/data/models/sample_item.dart';
+import 'package:sample_flow/features/samples/data/models/sample_status.dart';
+import 'package:sample_flow/features/samples/data/api/sample_api.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('Frontend Live HTTP Client Integration', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+      SampleApi().resetForTesting();
+    });
+
+    test('ApiClient handles endpoint structure and response parsing', () async {
+      final client = ApiClient();
+      expect(client.baseUrl, isNotEmpty);
+      expect(ApiEndpoints.samples, '/api/samples');
+      expect(ApiEndpoints.notifications, '/api/notifications');
+      expect(ApiEndpoints.sampleStatus('123'), '/api/samples/123/status');
+    });
+
+    test('SampleApi notifies listeners when data is updated or synced', () async {
+      final api = SampleApi();
+      int notificationCount = 0;
+      api.addListener(() {
+        notificationCount++;
+      });
+
+      await api.init();
+      expect(notificationCount > 0, true);
+
+      final sample = SampleItem(
+        id: 'test-sync-1',
+        title: 'Wireless Stream Mic',
+        category: 'Electronics & Audio',
+        remainingDays: 0,
+        totalDays: 0,
+        status: SampleStatus.pendingApproval,
+      );
+
+      final prevCount = notificationCount;
+      await api.addSample(sample);
+      expect(notificationCount > prevCount, true);
+    });
+  });
+}

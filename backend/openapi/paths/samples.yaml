@@ -1,0 +1,119 @@
+/api/samples:
+  get:
+    tags:
+      - Samples
+    summary: Retrieve creator samples
+    description: Retrieves all samples with optional filtering by status, category, or search text.
+    parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [pendingApproval, approved, pendingCriteria]
+        description: Filter by sample status
+      - name: category
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter by category
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search by title or category
+    responses:
+      "200":
+        description: List of samples
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Sample"
+
+  post:
+    tags:
+      - Samples
+    summary: Create a new creator sample request
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SampleInput"
+    responses:
+      "201":
+        description: Sample created successfully
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Sample"
+      "400":
+        description: Validation error
+
+/api/samples/{id}:
+  get:
+    tags:
+      - Samples
+    summary: Retrieve a single sample by ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      "200":
+        description: Sample details
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Sample"
+      "404":
+        description: Sample not found
+
+  delete:
+    tags:
+      - Samples
+    summary: Delete a sample
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      "200":
+        description: Sample deleted successfully
+      "404":
+        description: Sample not found
+
+/api/samples/{id}/status:
+  patch:
+    tags:
+      - Samples
+    summary: Update sample status and remaining days
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SampleStatusUpdate"
+    responses:
+      "200":
+        description: Sample status updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Sample"
+      "404":
+        description: Sample not found

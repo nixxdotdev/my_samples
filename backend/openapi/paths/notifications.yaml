@@ -1,0 +1,44 @@
+/api/notifications:
+  get:
+    tags:
+      - Notifications
+    summary: Retrieve creator notifications
+    responses:
+      "200":
+        description: List of notifications
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Notification"
+
+/api/notifications/read-all:
+  patch:
+    tags:
+      - Notifications
+    summary: Mark all notifications as read
+    responses:
+      "200":
+        description: All notifications marked as read
+
+/api/notifications/{id}/read:
+  patch:
+    tags:
+      - Notifications
+    summary: Mark a single notification as read
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      "200":
+        description: Notification marked as read
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      "404":
+        description: Notification not found

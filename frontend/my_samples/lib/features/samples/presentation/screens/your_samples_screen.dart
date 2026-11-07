@@ -29,6 +29,19 @@ class _YourSamplesScreenState extends State<YourSamplesScreen> {
   void initState() {
     super.initState();
     _selectedSampleStatusFilter = widget.initialStatusIndex;
+    SampleApi().addListener(_onDataChanged);
+  }
+
+  void _onDataChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    SampleApi().removeListener(_onDataChanged);
+    super.dispose();
   }
 
   @override
@@ -72,45 +85,61 @@ class _YourSamplesScreenState extends State<YourSamplesScreen> {
 
         // Scrollable List of Your Samples Cards
         Expanded(
-          child: samples.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      'No samples in this category',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+          child: RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: () async {
+              await SampleApi().syncWithBackend();
+              if (mounted) {
+                setState(() {});
+              }
+            },
+            child: samples.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
                     ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(48),
+                        child: Center(
+                          child: Text(
+                            'No samples in this category',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 16,
+                    ),
+                    itemCount: samples.length,
+                    itemBuilder: (context, index) {
+                      final item = samples[index];
+                      return YourSamplesCard(
+                        item: item,
+                        onTap: () {
+                          SampleDetailBottomSheet.show(
+                            context,
+                            item: item,
+                            onStatusChanged: () {
+                              setState(() {});
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
-                )
-              : ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics(),
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    bottom: 16,
-                  ),
-                  itemCount: samples.length,
-                  itemBuilder: (context, index) {
-                    final item = samples[index];
-                    return YourSamplesCard(
-                      item: item,
-                      onTap: () {
-                        SampleDetailBottomSheet.show(
-                          context,
-                          item: item,
-                          onStatusChanged: () {
-                            setState(() {});
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
+          ),
         ),
       ],
     );

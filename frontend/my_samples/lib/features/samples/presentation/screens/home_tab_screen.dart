@@ -29,7 +29,20 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    SampleApi().addListener(_onDataChanged);
+  }
+
+  void _onDataChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   void dispose() {
+    SampleApi().removeListener(_onDataChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -88,47 +101,63 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
 
         // Scrollable List of Sample Dues
         Expanded(
-          child: filteredSamples.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      _searchQuery.trim().isNotEmpty
-                          ? 'No samples match "$_searchQuery"'
-                          : 'No sample dues available',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 14,
-                        color: AppColors.textSecondary,
-                      ),
+          child: RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: () async {
+              await SampleApi().syncWithBackend();
+              if (mounted) {
+                setState(() {});
+              }
+            },
+            child: filteredSamples.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
                     ),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(48),
+                        child: Center(
+                          child: Text(
+                            _searchQuery.trim().isNotEmpty
+                                ? 'No samples match "$_searchQuery"'
+                                : 'No sample dues available',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 16,
+                    ),
+                    itemCount: filteredSamples.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredSamples[index];
+                      return SampleCard(
+                        item: item,
+                        onTap: () {
+                          SampleDetailBottomSheet.show(
+                            context,
+                            item: item,
+                            onStatusChanged: () {
+                              setState(() {});
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
-                )
-              : ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(
-                    parent: BouncingScrollPhysics(),
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    bottom: 16,
-                  ),
-                  itemCount: filteredSamples.length,
-                  itemBuilder: (context, index) {
-                    final item = filteredSamples[index];
-                    return SampleCard(
-                      item: item,
-                      onTap: () {
-                        SampleDetailBottomSheet.show(
-                          context,
-                          item: item,
-                          onStatusChanged: () {
-                            setState(() {});
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
+          ),
         ),
       ],
     );
