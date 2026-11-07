@@ -18,12 +18,14 @@ class NotificationItem {
     required this.title,
     required this.description,
     required this.timeAgo,
-    required this.icon,
-    required this.iconColor,
-    required this.iconBgColor,
+    IconData? icon,
+    Color? iconColor,
+    Color? iconBgColor,
     this.isRead = false,
     this.type,
-  });
+  })  : icon = icon ?? _resolveIcon(type),
+        iconColor = iconColor ?? _resolveColor(type),
+        iconBgColor = iconBgColor ?? _resolveBgColor(type);
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,56 +40,64 @@ class NotificationItem {
 
   factory NotificationItem.fromJson(Map<String, dynamic> json) {
     final type = (json['type'] as String? ?? 'info').toLowerCase();
-    IconData icon;
-    Color iconColor;
-    Color iconBgColor;
-
-    switch (type) {
-      case 'critical':
-      case 'urgent':
-      case 'deadline':
-        icon = LucideIcons.alertCircle;
-        iconColor = AppColors.critical;
-        iconBgColor = AppColors.critical.withValues(alpha: 0.12);
-        break;
-      case 'approved':
-      case 'success':
-        icon = LucideIcons.checkCircle;
-        iconColor = AppColors.approved;
-        iconBgColor = AppColors.approved.withValues(alpha: 0.12);
-        break;
-      case 'shipping':
-      case 'dispatched':
-      case 'package':
-        icon = LucideIcons.package;
-        iconColor = AppColors.primary;
-        iconBgColor = AppColors.primary.withValues(alpha: 0.12);
-        break;
-      case 'guidelines':
-      case 'pending':
-        icon = LucideIcons.fileText;
-        iconColor = AppColors.pending;
-        iconBgColor = AppColors.pending.withValues(alpha: 0.12);
-        break;
-      case 'offer':
-      case 'collaboration':
-      default:
-        icon = LucideIcons.sparkles;
-        iconColor = AppColors.primaryLight;
-        iconBgColor = AppColors.primaryLight.withValues(alpha: 0.15);
-        break;
-    }
-
     return NotificationItem(
       id: json['id']?.toString() ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       timeAgo: json['timeAgo'] as String? ?? 'Just now',
       isRead: json['isRead'] as bool? ?? false,
-      icon: icon,
-      iconColor: iconColor,
-      iconBgColor: iconBgColor,
       type: type,
     );
+  }
+
+  static IconData _resolveIcon(String? type) {
+    switch ((type ?? 'info').toLowerCase()) {
+      case 'critical':
+      case 'urgent':
+      case 'deadline':
+        return LucideIcons.alertCircle;
+      case 'approved':
+      case 'success':
+        return LucideIcons.checkCircle;
+      case 'shipping':
+      case 'dispatched':
+      case 'package':
+        return LucideIcons.package;
+      case 'guidelines':
+      case 'pending':
+        return LucideIcons.fileText;
+      case 'offer':
+      case 'collaboration':
+      default:
+        return LucideIcons.sparkles;
+    }
+  }
+
+  static Color _resolveColor(String? type) {
+    switch ((type ?? 'info').toLowerCase()) {
+      case 'critical':
+      case 'urgent':
+      case 'deadline':
+        return AppColors.critical;
+      case 'approved':
+      case 'success':
+        return AppColors.approved;
+      case 'shipping':
+      case 'dispatched':
+      case 'package':
+        return AppColors.primary;
+      case 'guidelines':
+      case 'pending':
+        return AppColors.pending;
+      case 'offer':
+      case 'collaboration':
+      default:
+        return AppColors.primaryLight;
+    }
+  }
+
+  static Color _resolveBgColor(String? type) {
+    final color = _resolveColor(type);
+    return color.withValues(alpha: 0.12);
   }
 }

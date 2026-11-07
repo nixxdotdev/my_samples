@@ -169,25 +169,13 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
       children: [
         Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(13),
-                border: Border.all(color: AppColors.border, width: 1.2),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
+            SizedBox(
+              width: 54,
+              height: 54,
               child: Image.asset(
                 'assets/logo/sf_logo_v1.png',
                 fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
               ),
             ),
             const SizedBox(width: 12),

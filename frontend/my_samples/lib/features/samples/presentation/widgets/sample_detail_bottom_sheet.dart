@@ -139,6 +139,58 @@ class SampleDetailBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 IconButton(
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        title: const Text('Delete Sample?'),
+                        content: Text(
+                          'Are you sure you want to delete "${item.title}"?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.critical,
+                            ),
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true) {
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
+                      await SampleApi().deleteSample(item.id);
+                      onStatusChanged();
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Deleted "${item.title}"'),
+                          backgroundColor: AppColors.critical,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(
+                    LucideIcons.trash2,
+                    size: 19,
+                    color: AppColors.critical,
+                  ),
+                  tooltip: 'Delete Sample',
+                ),
+                IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(
                     LucideIcons.x,
@@ -241,6 +293,9 @@ class SampleDetailBottomSheet extends StatelessWidget {
                                     SampleStatus.approved,
                                     remainingDays: selectedDays,
                                     totalDays: selectedDays,
+                                    deadlineDate: DateTime.now().add(
+                                      Duration(days: selectedDays),
+                                    ),
                                   );
                                   onStatusChanged();
                                   ScaffoldMessenger.of(context).showSnackBar(

@@ -7,7 +7,7 @@
       "remainingDays": 0,
       "totalDays": 0,
       "status": "pendingApproval",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "2",
@@ -16,7 +16,7 @@
       "remainingDays": 0,
       "totalDays": 0,
       "status": "pendingApproval",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "3",
@@ -25,7 +25,7 @@
       "remainingDays": 0,
       "totalDays": 0,
       "status": "pendingApproval",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "4",
@@ -34,7 +34,7 @@
       "remainingDays": 0,
       "totalDays": 0,
       "status": "pendingApproval",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "5",
@@ -43,7 +43,7 @@
       "remainingDays": 5,
       "totalDays": 14,
       "status": "approved",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "6",
@@ -52,7 +52,7 @@
       "remainingDays": 7,
       "totalDays": 14,
       "status": "approved",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "7",
@@ -61,7 +61,7 @@
       "remainingDays": 8,
       "totalDays": 14,
       "status": "approved",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "8",
@@ -70,7 +70,7 @@
       "remainingDays": 10,
       "totalDays": 14,
       "status": "approved",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "9",
@@ -79,7 +79,7 @@
       "remainingDays": 12,
       "totalDays": 14,
       "status": "pendingCriteria",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "10",
@@ -88,7 +88,7 @@
       "remainingDays": 14,
       "totalDays": 14,
       "status": "pendingCriteria",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "11",
@@ -97,7 +97,7 @@
       "remainingDays": 6,
       "totalDays": 14,
       "status": "pendingCriteria",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "12",
@@ -106,7 +106,7 @@
       "remainingDays": 9,
       "totalDays": 14,
       "status": "pendingCriteria",
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     }
   ],
   "notifications": [
@@ -117,8 +117,8 @@
       "timeAgo": "25m ago",
       "type": "urgent",
       "isRead": true,
-      "createdAt": "2026-11-07T04:51:25.657Z",
-      "updatedAt": "2026-11-07T04:51:25.751Z"
+      "createdAt": "2026-11-07T06:47:00.994Z",
+      "updatedAt": "2026-11-07T06:47:01.259Z"
     },
     {
       "id": "n2",
@@ -127,7 +127,7 @@
       "timeAgo": "2h ago",
       "type": "approved",
       "isRead": true,
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "n3",
@@ -136,7 +136,7 @@
       "timeAgo": "5h ago",
       "type": "shipping",
       "isRead": true,
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     },
     {
       "id": "n4",
@@ -145,7 +145,8 @@
       "timeAgo": "1d ago",
       "type": "guidelines",
       "isRead": true,
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z",
+      "updatedAt": "2026-11-07T07:14:20.457Z"
     },
     {
       "id": "n5",
@@ -154,8 +155,8 @@
       "timeAgo": "2d ago",
       "type": "offer",
       "isRead": true,
-      "createdAt": "2026-11-07T04:51:25.657Z"
+      "createdAt": "2026-11-07T06:47:00.994Z"
     }
   ],
-  "updatedAt": "2026-11-07T04:51:25.758Z"
+  "updatedAt": "2026-11-07T07:14:20.457Z"
 }

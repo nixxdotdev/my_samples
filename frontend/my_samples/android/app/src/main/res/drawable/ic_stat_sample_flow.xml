@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Gift box ribbon loops -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,7.2c-1.2,-0.5 -3,-1.2 -3.5,-2.2c-0.6,-1.1 -0.2,-2.5 1,-2.9c1.4,-0.4 2.5,0.7 3.3,2.4c0.8,-1.7 1.9,-2.8 3.3,-2.4c1.2,0.4 1.6,1.8 1,2.9c-0.5,1 -2.3,1.7 -3.5,2.2c-0.5,0.2 -1.1,0.3 -1.6,0.3c-0.5,0 -1.1,-0.1 -1.6,-0.3z"/>
+    <!-- Box lid -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M3,7.5h18v3.5h-18z"/>
+    <!-- Box body left & right side separated by vertical ribbon -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4,12h6.8v9h-6.8z M13.2,12h6.8v9h-6.8z"/>
+</vector>

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service responsible for managing local key-value and JSON persistence
@@ -19,13 +17,24 @@ class LocalStorageService {
   static const String _keyLastSync = 'last_sync_timestamp';
   static const String _keyOfflineMode = 'offline_mode_enabled';
 
-  // Default local backend URL (10.0.2.2 for Android emulator, localhost for desktop/iOS/Web)
-  static String get defaultLocalUrl {
-    if (!kIsWeb && Platform.isAndroid) {
-      return 'http://10.0.2.2:3000';
-    }
-    return 'http://localhost:3000';
-  }
+  // =========================================================================
+  // [OFFLINE-FIRST DEPLOYMENT CONFIGURATION]
+  // This APK is deployed as an offline-first app by default upon install.
+  // The remote backend URL configuration is commented out for this release.
+  //
+  // NEXT STAGE OF DEVELOPMENT (ONLINE MODE):
+  // When deploying the remote cloud backend (e.g. AWS, GCP, Railway, Render),
+  // uncomment and configure the production endpoint below:
+  //
+  // static const String remoteBackendUrl = 'https://api.yourdomain.com';
+  // static String get defaultLocalUrl {
+  //   if (!kIsWeb && Platform.isAndroid) {
+  //     return 'http://10.0.2.2:3000';
+  //   }
+  //   return 'http://localhost:3000';
+  // }
+  // =========================================================================
+  static const String defaultLocalUrl = 'http://offline.local';
 
   Future<SharedPreferences> init() async {
     _prefs ??= await SharedPreferences.getInstance();
@@ -58,71 +67,66 @@ class LocalStorageService {
   }
 
   // ---------------- SAMPLES CACHE ----------------
-  Future<bool> saveSamples(List<Map<String, dynamic>> samplesJson) async {
-    try {
-      final p = await init();
-      final jsonString = jsonEncode(samplesJson);
-      return await p.setString(_keySamplesCache, jsonString);
-    } catch (e) {
-      debugPrint('Error saving samples to cache: $e');
-      return false;
-    }
+  Future<bool> saveCachedSamples(List<Map<String, dynamic>> samples) async {
+    final p = await init();
+    return await p.setString(_keySamplesCache, jsonEncode(samples));
   }
 
   List<Map<String, dynamic>>? getCachedSamples() {
-    final jsonString = _prefs?.getString(_keySamplesCache);
-    if (jsonString == null || jsonString.isEmpty) return null;
+    final raw = _prefs?.getString(_keySamplesCache);
+    if (raw == null || raw.isEmpty) return null;
     try {
-      final decoded = jsonDecode(jsonString) as List;
-      return decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      final decoded = jsonDecode(raw);
+      if (decoded is List) {
+        return decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      }
     } catch (e) {
-      debugPrint('Error parsing cached samples: $e');
-      return null;
+      // Corrupt cache handling
     }
+    return null;
   }
 
   // ---------------- NOTIFICATIONS CACHE ----------------
-  Future<bool> saveNotifications(List<Map<String, dynamic>> notifsJson) async {
-    try {
-      final p = await init();
-      final jsonString = jsonEncode(notifsJson);
-      return await p.setString(_keyNotificationsCache, jsonString);
-    } catch (e) {
-      debugPrint('Error saving notifications to cache: $e');
-      return false;
-    }
+  Future<bool> saveCachedNotifications(
+    List<Map<String, dynamic>> notifications,
+  ) async {
+    final p = await init();
+    return await p.setString(_keyNotificationsCache, jsonEncode(notifications));
   }
 
   List<Map<String, dynamic>>? getCachedNotifications() {
-    final jsonString = _prefs?.getString(_keyNotificationsCache);
-    if (jsonString == null || jsonString.isEmpty) return null;
+    final raw = _prefs?.getString(_keyNotificationsCache);
+    if (raw == null || raw.isEmpty) return null;
     try {
-      final decoded = jsonDecode(jsonString) as List;
-      return decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      final decoded = jsonDecode(raw);
+      if (decoded is List) {
+        return decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      }
     } catch (e) {
-      debugPrint('Error parsing cached notifications: $e');
-      return null;
+      // Corrupt cache handling
     }
+    return null;
   }
 
-  // ---------------- SYNC & STATUS ----------------
+  // ---------------- SYNC METADATA ----------------
   Future<bool> setLastSync(DateTime time) async {
     final p = await init();
-    return await p.setInt(_keyLastSync, time.millisecondsSinceEpoch);
+    return await p.setString(_keyLastSync, time.toIso8601String());
   }
 
   DateTime? getLastSync() {
-    final ms = _prefs?.getInt(_keyLastSync);
-    return ms != null ? DateTime.fromMillisecondsSinceEpoch(ms) : null;
+    final raw = _prefs?.getString(_keyLastSync);
+    return raw != null ? DateTime.tryParse(raw) : null;
   }
 
-  Future<bool> setOfflineMode(bool enabled) async {
+  // ---------------- OFFLINE TOGGLE ----------------
+  Future<bool> setOfflineMode(bool isOffline) async {
     final p = await init();
-    return await p.setBool(_keyOfflineMode, enabled);
+    return await p.setBool(_keyOfflineMode, isOffline);
   }
 
-  bool isOfflineMode() {
-    return _prefs?.getBool(_keyOfflineMode) ?? false;
+  bool isOfflineModeEnabled() {
+    return _prefs?.getBool(_keyOfflineMode) ?? true;
   }
 
   Future<void> clearAll() async {

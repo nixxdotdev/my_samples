@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
+  // ignore: unused_element
   void _showBackendConfigDialog(BuildContext context) {
     final sampleApi = SampleApi();
     final controller = TextEditingController(text: sampleApi.currentBaseUrl);
@@ -29,7 +30,11 @@ class AboutScreen extends StatelessWidget {
               ),
               title: Row(
                 children: [
-                  const Icon(LucideIcons.server, color: AppColors.primary, size: 22),
+                  const Icon(
+                    LucideIcons.server,
+                    color: AppColors.primary,
+                    size: 22,
+                  ),
                   const SizedBox(width: 10),
                   Text(
                     'Backend API URL',
@@ -43,7 +48,10 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Configure the REST backend server endpoint for synchronization:',
-                    style: GoogleFonts.dmSans(fontSize: 13, color: AppColors.textSecondary),
+                    style: GoogleFonts.dmSans(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -54,7 +62,10 @@ class AboutScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       prefixIcon: const Icon(LucideIcons.globe, size: 18),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -80,9 +91,13 @@ class AboutScreen extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          isSuccess == true ? LucideIcons.checkCircle : LucideIcons.alertCircle,
+                          isSuccess == true
+                              ? LucideIcons.checkCircle
+                              : LucideIcons.alertCircle,
                           size: 16,
-                          color: isSuccess == true ? AppColors.approved : AppColors.critical,
+                          color: isSuccess == true
+                              ? AppColors.approved
+                              : AppColors.critical,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -90,7 +105,9 @@ class AboutScreen extends StatelessWidget {
                             checkResult!,
                             style: GoogleFonts.dmSans(
                               fontSize: 12.5,
-                              color: isSuccess == true ? AppColors.approved : AppColors.critical,
+                              color: isSuccess == true
+                                  ? AppColors.approved
+                                  : AppColors.critical,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -126,7 +143,9 @@ class AboutScreen extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onPressed: () async {
                     final trimmed = controller.text.trim();
@@ -144,7 +163,10 @@ class AboutScreen extends StatelessWidget {
                       }
                     }
                   },
-                  child: const Text('Save & Sync', style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'Save & Sync',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             );
@@ -188,26 +210,14 @@ class AboutScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 12),
-          // App Logo
-          Container(
-            width: 96,
-            height: 96,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border, width: 1.5),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.14),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
+          // Floating App Logo (No white background)
+          SizedBox(
+            width: 130,
+            height: 130,
             child: Image.asset(
               'assets/logo/sf_logo_v1.png',
               fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
             ),
           ),
           const SizedBox(height: 16),
@@ -388,107 +398,107 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Backend Server Connection Card
-          ListenableBuilder(
-            listenable: SampleApi(),
-            builder: (context, _) {
-              final sampleApi = SampleApi();
-              final isOffline = sampleApi.isOffline;
-              final baseUrl = sampleApi.currentBaseUrl;
+          // ListenableBuilder(
+          //   listenable: SampleApi(),
+          //   builder: (context, _) {
+          //     final sampleApi = SampleApi();
+          //     final isOffline = sampleApi.isOffline;
+          //     final baseUrl = sampleApi.currentBaseUrl;
 
-              return Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.border, width: 1.2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(LucideIcons.server, color: AppColors.primary, size: 18),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Backend API Server',
-                              style: GoogleFonts.dmSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: (isOffline ? AppColors.warning : AppColors.approved)
-                                .withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 7,
-                                height: 7,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isOffline ? AppColors.warning : AppColors.approved,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                isOffline ? 'Offline Cache' : 'Live Sync',
-                                style: GoogleFonts.dmSans(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: isOffline ? AppColors.warning : AppColors.approved,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      baseUrl,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 12.5,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          side: const BorderSide(color: AppColors.border),
-                        ),
-                        onPressed: () => _showBackendConfigDialog(context),
-                        icon: const Icon(LucideIcons.settings2, size: 16, color: AppColors.primary),
-                        label: Text(
-                          'Configure Server URL',
-                          style: GoogleFonts.dmSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 24),
+          //     return Container(
+          //       width: double.infinity,
+          //       padding: const EdgeInsets.all(18),
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(20),
+          //         border: Border.all(color: AppColors.border, width: 1.2),
+          //       ),
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Row(
+          //                 children: [
+          //                   const Icon(LucideIcons.server, color: AppColors.primary, size: 18),
+          //                   const SizedBox(width: 8),
+          //                   Text(
+          //                     'Backend API Server',
+          //                     style: GoogleFonts.dmSans(
+          //                       fontSize: 14,
+          //                       fontWeight: FontWeight.w700,
+          //                       color: AppColors.textPrimary,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //               Container(
+          //                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+          //                 decoration: BoxDecoration(
+          //                   color: (isOffline ? AppColors.warning : AppColors.approved)
+          //                       .withValues(alpha: 0.12),
+          //                   borderRadius: BorderRadius.circular(20),
+          //                 ),
+          //                 child: Row(
+          //                   mainAxisSize: MainAxisSize.min,
+          //                   children: [
+          //                     Container(
+          //                       width: 7,
+          //                       height: 7,
+          //                       decoration: BoxDecoration(
+          //                         shape: BoxShape.circle,
+          //                         color: isOffline ? AppColors.warning : AppColors.approved,
+          //                       ),
+          //                     ),
+          //                     const SizedBox(width: 5),
+          //                     Text(
+          //                       isOffline ? 'Offline Cache' : 'Live Sync',
+          //                       style: GoogleFonts.dmSans(
+          //                         fontSize: 11,
+          //                         fontWeight: FontWeight.w700,
+          //                         color: isOffline ? AppColors.warning : AppColors.approved,
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //           const SizedBox(height: 8),
+          //           Text(
+          //             baseUrl,
+          //             style: GoogleFonts.dmSans(
+          //               fontSize: 12.5,
+          //               color: AppColors.textSecondary,
+          //             ),
+          //           ),
+          //           const SizedBox(height: 12),
+          //           SizedBox(
+          //             width: double.infinity,
+          //             child: OutlinedButton.icon(
+          //               style: OutlinedButton.styleFrom(
+          //                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          //                 side: const BorderSide(color: AppColors.border),
+          //               ),
+          //               onPressed: () => _showBackendConfigDialog(context),
+          //               icon: const Icon(LucideIcons.settings2, size: 16, color: AppColors.primary),
+          //               label: Text(
+          //                 'Configure Server URL',
+          //                 style: GoogleFonts.dmSans(
+          //                   fontSize: 13,
+          //                   fontWeight: FontWeight.w600,
+          //                   color: AppColors.primary,
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   },
+          // ),
+          // const SizedBox(height: 24),
 
           // Footer: Clickable portfolio link
           InkWell(
