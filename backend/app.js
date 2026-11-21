@@ -68,7 +68,7 @@ try {
 // Root route
 app.get('/', (req, res) => {
   res.json({
-    name: 'SampleFlow Creator API',
+    name: 'MySample Creator API',
     status: 'online',
     docs: '/api-docs',
     endpoints: {

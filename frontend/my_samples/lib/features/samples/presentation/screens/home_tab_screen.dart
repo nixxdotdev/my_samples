@@ -1,23 +1,25 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/notifications/presentation/widgets/notifications_bottom_sheet.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
-import 'package:sample_flow/features/samples/presentation/widgets/analytics_card.dart';
-import 'package:sample_flow/features/samples/presentation/widgets/sample_card.dart';
-import 'package:sample_flow/features/samples/presentation/widgets/sample_detail_bottom_sheet.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/notifications/presentation/widgets/notifications_bottom_sheet.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/features/samples/presentation/widgets/analytics_card.dart';
+import 'package:my_samples/features/samples/presentation/widgets/sample_card.dart';
+import 'package:my_samples/features/samples/presentation/widgets/sample_detail_bottom_sheet.dart';
 
 class HomeTabScreen extends StatefulWidget {
   final ValueChanged<int> onNavigateToSamplesWithStatus;
   final VoidCallback onNavigateToSamples;
+  final VoidCallback? onStartGuide;
 
   const HomeTabScreen({
     super.key,
     required this.onNavigateToSamplesWithStatus,
     required this.onNavigateToSamples,
+    this.onStartGuide,
   });
 
   @override
@@ -169,84 +171,147 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
       children: [
         Row(
           children: [
-            SizedBox(
-              width: 54,
-              height: 54,
-              child: Image.asset(
-                'assets/logo/sf_logo_v1.png',
-                fit: BoxFit.contain,
-                filterQuality: FilterQuality.high,
-              ),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                SizedBox(
+                  width: 54,
+                  height: 54,
+                  child: Image.asset(
+                    'assets/logo/sf_logo_v1.png',
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+                if (hasUnread)
+                  Positioned(
+                    top: 2,
+                    left: 2,
+                    child: Container(
+                      width: 9,
+                      height: 9,
+                      decoration: BoxDecoration(
+                        color: AppColors.critical,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'SampleFlow',
-                  style: GoogleFonts.outfit(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.4,
-                  ),
-                ),
-                Text(
-                  'Your Sample Tracker Hub',
-                  style: GoogleFonts.dmSans(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
+            Text(
+              'MySample',
+              style: GoogleFonts.outfit(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+                letterSpacing: -0.4,
+              ),
             ),
           ],
         ),
-        // Notification bell with badge dot
-        Stack(
+        // Action buttons: Guide button + Notification bell with badge dot
+        Row(
           children: [
+            // Interactive Guided Tour Button
             Container(
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.border, width: 1.2),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppColors.primaryLight.withValues(alpha: 0.6),
+                  width: 1.2,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
+                    color: AppColors.primary.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
               ),
-              child: IconButton(
-                onPressed: () {
-                  NotificationsBottomSheet.show(
-                    context,
-                    onUpdated: () => setState(() {}),
-                  );
-                },
-                icon: const Icon(
-                  LucideIcons.bell,
-                  color: AppColors.textPrimary,
-                  size: 22,
-                ),
-                tooltip: 'Notifications',
-              ),
-            ),
-            if (hasUnread)
-              Positioned(
-                right: 10,
-                top: 10,
-                child: Container(
-                  width: 9,
-                  height: 9,
-                  decoration: const BoxDecoration(
-                    color: AppColors.critical,
-                    shape: BoxShape.circle,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: widget.onStartGuide,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          LucideIcons.circleQuestionMark,
+                          size: 15,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Guide',
+                          style: GoogleFonts.dmSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
+            ),
+            const SizedBox(width: 8),
+
+            // Notification bell with badge dot
+            Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.border, width: 1.2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      NotificationsBottomSheet.show(
+                        context,
+                        onUpdated: () => setState(() {}),
+                      );
+                    },
+                    icon: const Icon(
+                      LucideIcons.bell,
+                      color: AppColors.textPrimary,
+                      size: 22,
+                    ),
+                    tooltip: 'Notifications',
+                  ),
+                ),
+                if (hasUnread)
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      width: 9,
+                      height: 9,
+                      decoration: const BoxDecoration(
+                        color: AppColors.critical,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
       ],

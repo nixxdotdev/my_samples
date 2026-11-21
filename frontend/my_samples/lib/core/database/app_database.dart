@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'package:my_samples/features/samples/data/models/notification_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/features/samples/data/utils/sample_utils.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
-import 'package:sample_flow/features/samples/data/models/notification_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
-import 'package:sample_flow/features/samples/data/utils/sample_utils.dart';
 
 /// Central SQLite Database Service for offline mobile storage.
 /// Manages the local SQLite database instance ('sample_flow.db') with
@@ -164,23 +165,19 @@ class AppDatabase {
     String userId = 'local_creator',
   }) async {
     final db = await database;
-    await db.insert(
-      'samples',
-      {
-        'id': item.id,
-        'user_id': userId,
-        'title': item.title,
-        'category': item.category,
-        'remaining_days': item.remainingDays,
-        'total_days': item.totalDays,
-        'deadline_date': item.deadlineDate?.toIso8601String(),
-        'status': item.status.name,
-        'created_at': DateTime.now().toIso8601String(),
-        'updated_at': DateTime.now().toIso8601String(),
-        'sync_status': 'synced',
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('samples', {
+      'id': item.id,
+      'user_id': userId,
+      'title': item.title,
+      'category': item.category,
+      'remaining_days': item.remainingDays,
+      'total_days': item.totalDays,
+      'deadline_date': item.deadlineDate?.toIso8601String(),
+      'status': item.status.name,
+      'created_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toIso8601String(),
+      'sync_status': 'synced',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   /// Update sample status and remaining / total days / deadline date
@@ -208,22 +205,13 @@ class AppDatabase {
       values['deadline_date'] = null;
     }
 
-    await db.update(
-      'samples',
-      values,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.update('samples', values, where: 'id = ?', whereArgs: [id]);
   }
 
   /// Delete a sample by ID
   Future<void> deleteSample(String id) async {
     final db = await database;
-    await db.delete(
-      'samples',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('samples', where: 'id = ?', whereArgs: [id]);
   }
 
   /// Get summary counts for pending, approved, and posted samples
@@ -231,14 +219,17 @@ class AppDatabase {
     String userId = 'local_creator',
   }) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT 
         status, 
         COUNT(*) as count 
       FROM samples 
       WHERE user_id = ? 
       GROUP BY status
-    ''', [userId]);
+    ''',
+      [userId],
+    );
 
     int pending = 0;
     int approved = 0;
@@ -278,8 +269,9 @@ class AppDatabase {
 
     final category = row['category'] as String? ?? 'Electronics & Audio';
     final deadlineStr = row['deadline_date'] as String?;
-    final deadlineDate =
-        deadlineStr != null ? DateTime.tryParse(deadlineStr) : null;
+    final deadlineDate = deadlineStr != null
+        ? DateTime.tryParse(deadlineStr)
+        : null;
 
     int remainingDays = (row['remaining_days'] as num?)?.toInt() ?? 0;
     if (deadlineDate != null && status == SampleStatus.approved) {
@@ -335,20 +327,16 @@ class AppDatabase {
     String userId = 'local_creator',
   }) async {
     final db = await database;
-    await db.insert(
-      'notifications',
-      {
-        'id': item.id,
-        'user_id': userId,
-        'title': item.title,
-        'description': item.description,
-        'time_ago': item.timeAgo,
-        'type': item.type ?? 'info',
-        'is_read': item.isRead ? 1 : 0,
-        'created_at': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('notifications', {
+      'id': item.id,
+      'user_id': userId,
+      'title': item.title,
+      'description': item.description,
+      'time_ago': item.timeAgo,
+      'type': item.type ?? 'info',
+      'is_read': item.isRead ? 1 : 0,
+      'created_at': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   /// Mark single notification as read
@@ -378,23 +366,20 @@ class AppDatabase {
   /// Delete notification by id
   Future<void> deleteNotification(String id) async {
     final db = await database;
-    await db.delete(
-      'notifications',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('notifications', where: 'id = ?', whereArgs: [id]);
   }
 
   /// Check if there are any unread notifications
-  Future<bool> hasUnreadNotifications({
-    String userId = 'local_creator',
-  }) async {
+  Future<bool> hasUnreadNotifications({String userId = 'local_creator'}) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT COUNT(*) as count 
       FROM notifications 
       WHERE user_id = ? AND is_read = 0
-    ''', [userId]);
+    ''',
+      [userId],
+    );
 
     final count = Sqflite.firstIntValue(result) ?? 0;
     return count > 0;

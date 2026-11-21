@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/notifications/presentation/widgets/notification_card.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/notifications/presentation/widgets/notification_card.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
 
 class NotificationsBottomSheet extends StatefulWidget {
   final VoidCallback? onUpdated;

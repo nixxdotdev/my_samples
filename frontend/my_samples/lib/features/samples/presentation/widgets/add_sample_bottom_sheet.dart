@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
-import 'package:sample_flow/features/samples/data/utils/sample_utils.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/features/samples/data/utils/sample_utils.dart';
 
 class AddSampleBottomSheet extends StatefulWidget {
   final ValueChanged<SampleItem> onSampleAdded;
@@ -166,6 +166,45 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // Guided Banner for Step 1
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.08,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: AppColors.primaryLight.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    LucideIcons.mousePointerClick,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      "STEP 1 OF 2: Tap the card below matching your sample's stage.",
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Text(
                               'What status of sample would you like to add?',
                               style: GoogleFonts.dmSans(
@@ -177,21 +216,20 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                             const SizedBox(height: 16),
                             _buildStatusChoiceTile(
                               title: 'Pending Approval',
-                              subtitle:
-                                  'Sample requested, waiting for merchant approval',
+                              subtitle: 'Sample requested, waiting for merchant approval',
                               icon: LucideIcons.clock,
                               color: AppColors.pending,
                               onTap: () {
                                 setState(() {
-                                  _selectedStatus = SampleStatus.pendingApproval;
+                                  _selectedStatus =
+                                      SampleStatus.pendingApproval;
                                 });
                               },
                             ),
                             const SizedBox(height: 12),
                             _buildStatusChoiceTile(
                               title: 'Approved Samples',
-                              subtitle:
-                                  'Sample approved, set days left to post video',
+                              subtitle: 'Sample approved, set days left to post video',
                               icon: LucideIcons.checkCircle,
                               color: AppColors.approved,
                               onTap: () {
@@ -205,7 +243,7 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                               title: 'Posted Samples',
                               subtitle:
                                   'Sample content has already been posted',
-                              icon: LucideIcons.sparkles,
+                              icon: LucideIcons.stickyNoteCheck,
                               color: AppColors.posting,
                               onTap: () {
                                 setState(() {
@@ -274,16 +312,83 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 18),
+                              // Guided Banner for Step 2
+                              Container(
+                                margin: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 14,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColors.primaryLight.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      LucideIcons.pencilLine,
+                                      color: AppColors.primary,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        'STEP 2 OF 2: Fill in the product details and deadline below.',
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
 
                               // Field 1: Sample Name
-                              Text(
-                                'Sample Name',
-                                style: GoogleFonts.dmSans(
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '1. Sample Name',
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'TYPE HERE (REQUIRED)',
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 9.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 6),
                               TextFormField(
@@ -299,8 +404,7 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                   return null;
                                 },
                                 decoration: InputDecoration(
-                                  hintText:
-                                      'e.g. Wireless ANC Noise-Cancelling Headphones',
+                                  hintText: 'e.g. Wireless ANC Noise-Cancelling Headphones',
                                   hintStyle: GoogleFonts.dmSans(
                                     fontSize: 13,
                                     color: AppColors.textMuted,
@@ -340,13 +444,38 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                               const SizedBox(height: 18),
 
                               // Field 2: Category (Dropdown)
-                              Text(
-                                'Category',
-                                style: GoogleFonts.dmSans(
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    '2. Category',
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'CHOOSE FROM 10 CATEGORIES',
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 9.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 6),
                               DropdownButtonFormField<String>(
@@ -410,16 +539,40 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                               ),
 
                               // Field 3: Days Left (Show ONLY if user chooses Approved Samples)
-                              if (_selectedStatus ==
-                                  SampleStatus.approved) ...[
+                              if (_selectedStatus == SampleStatus.approved) ...[
                                 const SizedBox(height: 20),
-                                Text(
-                                  'Days Left to Post',
-                                  style: GoogleFonts.dmSans(
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.textPrimary,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '3. Days Left to Post',
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: urgencyColor.withValues(
+                                          alpha: 0.12,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        'ADJUST [-] [+] OR PRESETS',
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w700,
+                                          color: urgencyColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
@@ -451,9 +604,10 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                           color: _selectedDays > 1
                                               ? AppColors.surfaceMuted
                                               : AppColors.surfaceMuted
-                                                  .withValues(alpha: 0.4),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                                    .withValues(alpha: 0.4),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           border: Border.all(
                                             color: _selectedDays > 1
                                                 ? AppColors.border
@@ -481,8 +635,7 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                         color: urgencyColor.withValues(
                                           alpha: 0.08,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(14),
+                                        borderRadius: BorderRadius.circular(14),
                                         border: Border.all(
                                           color: urgencyColor.withValues(
                                             alpha: 0.3,
@@ -532,9 +685,10 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                           color: _selectedDays < 90
                                               ? AppColors.surfaceMuted
                                               : AppColors.surfaceMuted
-                                                  .withValues(alpha: 0.4),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                                    .withValues(alpha: 0.4),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           border: Border.all(
                                             color: _selectedDays < 90
                                                 ? AppColors.border
@@ -571,8 +725,9 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                       },
                                       borderRadius: BorderRadius.circular(8),
                                       child: AnimatedContainer(
-                                        duration:
-                                            const Duration(milliseconds: 150),
+                                        duration: const Duration(
+                                          milliseconds: 150,
+                                        ),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 10,
                                           vertical: 6,
@@ -581,8 +736,9 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                           color: isSelected
                                               ? AppColors.primary
                                               : AppColors.surfaceMuted,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                           border: Border.all(
                                             color: isSelected
                                                 ? AppColors.primary
@@ -623,8 +779,9 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary
-                                          .withValues(alpha: 0.28),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.28,
+                                      ),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
                                     ),
@@ -638,17 +795,20 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                       if (_formKey.currentState?.validate() ??
                                           false) {
                                         final newSample = SampleItem(
-                                          id: (DateTime.now()
-                                                      .millisecondsSinceEpoch %
-                                                  10000)
-                                              .toString(),
+                                          id:
+                                              (DateTime.now()
+                                                          .millisecondsSinceEpoch %
+                                                      10000)
+                                                  .toString(),
                                           title: _nameController.text.trim(),
                                           category: _selectedCategory,
-                                          remainingDays: _selectedStatus ==
+                                          remainingDays:
+                                              _selectedStatus ==
                                                   SampleStatus.approved
                                               ? _selectedDays
                                               : 0,
-                                          totalDays: _selectedStatus ==
+                                          totalDays:
+                                              _selectedStatus ==
                                                   SampleStatus.approved
                                               ? _selectedDays
                                               : 0,
@@ -668,10 +828,9 @@ class _AddSampleBottomSheetState extends State<AddSampleBottomSheet> {
                                           SnackBar(
                                             backgroundColor:
                                                 SampleUtils.getSampleStatusColor(
-                                              _selectedStatus!,
-                                            ),
-                                            behavior:
-                                                SnackBarBehavior.floating,
+                                                  _selectedStatus!,
+                                                ),
+                                            behavior: SnackBarBehavior.floating,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),

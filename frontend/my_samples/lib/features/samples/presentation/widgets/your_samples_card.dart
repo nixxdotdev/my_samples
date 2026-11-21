@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
 
 class YourSamplesCard extends StatelessWidget {
   final SampleItem item;

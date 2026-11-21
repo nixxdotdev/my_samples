@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
-import 'package:sample_flow/features/samples/data/utils/sample_utils.dart';
-import 'package:sample_flow/features/samples/presentation/widgets/set_days_dialog.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/features/samples/data/utils/sample_utils.dart';
+import 'package:my_samples/features/samples/presentation/widgets/set_days_dialog.dart';
 
 class SampleDetailBottomSheet extends StatelessWidget {
   final SampleItem item;
@@ -214,6 +214,54 @@ class SampleDetailBottomSheet extends StatelessWidget {
                 vertical: 14,
               ),
               children: [
+                // Guided Action Guidance Card
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isPendingApproval
+                        ? AppColors.pending.withValues(alpha: 0.08)
+                        : (isApproved
+                            ? AppColors.approved.withValues(alpha: 0.1)
+                            : AppColors.primary.withValues(alpha: 0.08)),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: isPendingApproval
+                          ? AppColors.pending.withValues(alpha: 0.3)
+                          : (isApproved
+                              ? AppColors.approved.withValues(alpha: 0.3)
+                              : AppColors.primaryLight.withValues(alpha: 0.3)),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isPendingApproval
+                            ? LucideIcons.mousePointerClick
+                            : (isApproved ? LucideIcons.sparkles : LucideIcons.checkCheck),
+                        color: isPendingApproval
+                            ? AppColors.pending
+                            : (isApproved ? AppColors.approved : AppColors.primary),
+                        size: 18,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          isPendingApproval
+                              ? 'GUIDED ACTION: Tap "Move to Approved Samples" below when the seller approves your request.'
+                              : (isApproved
+                                  ? 'GUIDED ACTION: You have ${item.remainingDays} days left to post. Once uploaded to TikTok, tap "Mark Sample as Posted" below.'
+                                  : 'GUIDED STATUS: Completed! Video review requirement has been fulfilled.'),
+                          style: GoogleFonts.dmSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 _buildDetailCard(
                   icon: item.icon,
                   iconColor: AppColors.primary,

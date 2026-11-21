@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/samples/data/models/notification_item.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/samples/data/models/notification_item.dart';
 
 class NotificationCard extends StatelessWidget {
   final NotificationItem item;

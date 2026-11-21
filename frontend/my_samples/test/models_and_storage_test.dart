@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sample_flow/core/database/app_database.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
-import 'package:sample_flow/features/samples/data/models/notification_item.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/core/database/app_database.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/features/samples/data/models/notification_item.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

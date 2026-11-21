@@ -16,6 +16,7 @@ class LocalStorageService {
   static const String _keyNotificationsCache = 'cached_notifications_json';
   static const String _keyLastSync = 'last_sync_timestamp';
   static const String _keyOfflineMode = 'offline_mode_enabled';
+  static const String _keySeenTour = 'has_seen_interactive_tour';
 
   // =========================================================================
   // [OFFLINE-FIRST DEPLOYMENT CONFIGURATION]
@@ -127,6 +128,16 @@ class LocalStorageService {
 
   bool isOfflineModeEnabled() {
     return _prefs?.getBool(_keyOfflineMode) ?? true;
+  }
+
+  // ---------------- INTERACTIVE GUIDE TOUR ----------------
+  Future<bool> setSeenInteractiveTour(bool seen) async {
+    final p = await init();
+    return await p.setBool(_keySeenTour, seen);
+  }
+
+  bool hasSeenInteractiveTour() {
+    return _prefs?.getBool(_keySeenTour) ?? false;
   }
 
   Future<void> clearAll() async {

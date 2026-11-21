@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
 
 class SetDaysDialog extends StatefulWidget {
   final SampleItem item;
@@ -108,7 +108,36 @@ class _SetDaysDialogState extends State<SetDaysDialog> {
             ),
             const SizedBox(height: 16),
             const Divider(height: 1, color: AppColors.border),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
+
+            // Guided Instruction Banner
+            Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.primaryLight.withValues(alpha: 0.35),
+                ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.lightbulb, size: 16, color: AppColors.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'HOW TO SET: Use [-]/[+] or click a quick preset below, then tap "Confirm & Move".',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             // Product title preview
             Container(

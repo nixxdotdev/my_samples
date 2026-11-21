@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:sample_flow/core/database/app_database.dart';
-import 'package:sample_flow/core/notifications/local_notification_service.dart';
-import 'package:sample_flow/features/samples/data/models/notification_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_item.dart';
-import 'package:sample_flow/features/samples/data/models/sample_status.dart';
+import 'package:my_samples/core/database/app_database.dart';
+import 'package:my_samples/core/notifications/local_notification_service.dart';
+import 'package:my_samples/features/samples/data/models/notification_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_item.dart';
+import 'package:my_samples/features/samples/data/models/sample_status.dart';
 
 /// Milestone definition model
 class DeadlineMilestone {
@@ -95,8 +95,9 @@ class DeadlineNotificationEngine {
       if (alreadyNotified) continue;
 
       // Milestone date (e.g. deadline minus 5 days, at 9:00 AM)
-      final rawDate =
-          deadline.subtract(Duration(days: milestone.daysBeforeDeadline));
+      final rawDate = deadline.subtract(
+        Duration(days: milestone.daysBeforeDeadline),
+      );
       final scheduledAlarmTime = DateTime(
         rawDate.year,
         rawDate.month,
@@ -148,8 +149,8 @@ class DeadlineNotificationEngine {
   }) async {
     final currentRefTime = now ?? DateTime.now();
 
-    List<SampleItem> targetSamples = samples ??
-        await _db.getAllSamples(status: SampleStatus.approved.name);
+    List<SampleItem> targetSamples =
+        samples ?? await _db.getAllSamples(status: SampleStatus.approved.name);
 
     // Filter to only approved items
     targetSamples = targetSamples
@@ -163,8 +164,9 @@ class DeadlineNotificationEngine {
       final int remainingDays;
       if (sample.deadlineDate != null) {
         final diff = sample.deadlineDate!.difference(currentRefTime);
-        remainingDays =
-            diff.isNegative ? 0 : (diff.inMinutes / (24 * 60)).ceil();
+        remainingDays = diff.isNegative
+            ? 0
+            : (diff.inMinutes / (24 * 60)).ceil();
       } else {
         remainingDays = sample.remainingDays;
       }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:sample_flow/core/constants/app_colors.dart';
-import 'package:sample_flow/core/network/api_client.dart';
-import 'package:sample_flow/features/about/presentation/widgets/about_feature_row.dart';
-import 'package:sample_flow/features/samples/data/api/sample_api.dart';
+import 'package:my_samples/core/constants/app_colors.dart';
+import 'package:my_samples/core/network/api_client.dart';
+import 'package:my_samples/features/about/presentation/widgets/about_feature_row.dart';
+import 'package:my_samples/features/samples/data/api/sample_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({super.key});
+  final VoidCallback? onStartGuide;
+
+  const AboutScreen({super.key, this.onStartGuide});
 
   // ignore: unused_element
   void _showBackendConfigDialog(BuildContext context) {
@@ -210,7 +212,7 @@ class AboutScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 12),
-          // Floating App Logo (No white background)
+          // Floating App Logo
           SizedBox(
             width: 130,
             height: 130,
@@ -223,7 +225,7 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 16),
           // App Name
           Text(
-            'SampleFlow',
+            'MySample',
             style: GoogleFonts.outfit(
               fontSize: 26,
               fontWeight: FontWeight.w800,
@@ -314,7 +316,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'About SampleFlow',
+                      'About MySample',
                       style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -325,11 +327,105 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'SampleFlow is designed specifically for TikTok Shop Creators & Affiliates. It streamlines the lifecycle of free product samples from request to post, preventing missed video deadlines and keeping your Creator Score in top standing.',
+                  'MySample is designed specifically for TikTok Shop Creators & Affiliates. It streamlines the lifecycle of free product samples from request to post, preventing missed video deadlines and keeping your Creator Score in top standing.',
                   style: GoogleFonts.dmSans(
                     fontSize: 13,
                     height: 1.55,
                     color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Interactive UI Walkthrough Card
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppColors.primaryLight.withValues(alpha: 0.8),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        LucideIcons.compass,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Real-Time UI Walkthrough',
+                            style: GoogleFonts.outfit(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Follow an interactive on-screen guide of all buttons & forms',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: onStartGuide,
+                    icon: const Icon(
+                      LucideIcons.sparkles,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      'Start Real-Time Walkthrough',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -395,110 +491,7 @@ class AboutScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
-
-          // Backend Server Connection Card
-          // ListenableBuilder(
-          //   listenable: SampleApi(),
-          //   builder: (context, _) {
-          //     final sampleApi = SampleApi();
-          //     final isOffline = sampleApi.isOffline;
-          //     final baseUrl = sampleApi.currentBaseUrl;
-
-          //     return Container(
-          //       width: double.infinity,
-          //       padding: const EdgeInsets.all(18),
-          //       decoration: BoxDecoration(
-          //         color: Colors.white,
-          //         borderRadius: BorderRadius.circular(20),
-          //         border: Border.all(color: AppColors.border, width: 1.2),
-          //       ),
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Row(
-          //                 children: [
-          //                   const Icon(LucideIcons.server, color: AppColors.primary, size: 18),
-          //                   const SizedBox(width: 8),
-          //                   Text(
-          //                     'Backend API Server',
-          //                     style: GoogleFonts.dmSans(
-          //                       fontSize: 14,
-          //                       fontWeight: FontWeight.w700,
-          //                       color: AppColors.textPrimary,
-          //                     ),
-          //                   ),
-          //                 ],
-          //               ),
-          //               Container(
-          //                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-          //                 decoration: BoxDecoration(
-          //                   color: (isOffline ? AppColors.warning : AppColors.approved)
-          //                       .withValues(alpha: 0.12),
-          //                   borderRadius: BorderRadius.circular(20),
-          //                 ),
-          //                 child: Row(
-          //                   mainAxisSize: MainAxisSize.min,
-          //                   children: [
-          //                     Container(
-          //                       width: 7,
-          //                       height: 7,
-          //                       decoration: BoxDecoration(
-          //                         shape: BoxShape.circle,
-          //                         color: isOffline ? AppColors.warning : AppColors.approved,
-          //                       ),
-          //                     ),
-          //                     const SizedBox(width: 5),
-          //                     Text(
-          //                       isOffline ? 'Offline Cache' : 'Live Sync',
-          //                       style: GoogleFonts.dmSans(
-          //                         fontSize: 11,
-          //                         fontWeight: FontWeight.w700,
-          //                         color: isOffline ? AppColors.warning : AppColors.approved,
-          //                       ),
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           const SizedBox(height: 8),
-          //           Text(
-          //             baseUrl,
-          //             style: GoogleFonts.dmSans(
-          //               fontSize: 12.5,
-          //               color: AppColors.textSecondary,
-          //             ),
-          //           ),
-          //           const SizedBox(height: 12),
-          //           SizedBox(
-          //             width: double.infinity,
-          //             child: OutlinedButton.icon(
-          //               style: OutlinedButton.styleFrom(
-          //                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          //                 side: const BorderSide(color: AppColors.border),
-          //               ),
-          //               onPressed: () => _showBackendConfigDialog(context),
-          //               icon: const Icon(LucideIcons.settings2, size: 16, color: AppColors.primary),
-          //               label: Text(
-          //                 'Configure Server URL',
-          //                 style: GoogleFonts.dmSans(
-          //                   fontSize: 13,
-          //                   fontWeight: FontWeight.w600,
-          //                   color: AppColors.primary,
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     );
-          //   },
-          // ),
-          // const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Footer: Clickable portfolio link
           InkWell(

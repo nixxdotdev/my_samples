@@ -54,8 +54,9 @@ class LocalNotificationService {
       // 1. Initialize Timezone database for zoned scheduling
       tz.initializeTimeZones();
 
-      const androidSettings =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings = AndroidInitializationSettings(
+        '@mipmap/ic_launcher',
+      );
       const darwinSettings = DarwinInitializationSettings(
         requestAlertPermission: false,
         requestBadgePermission: false,
@@ -80,7 +81,8 @@ class LocalNotificationService {
       // Create high-importance notification channel for Android
       final androidImplementation = _notificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       if (androidImplementation != null) {
         const androidChannel = AndroidNotificationChannel(
@@ -108,17 +110,19 @@ class LocalNotificationService {
     try {
       final androidImplementation = _notificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       if (androidImplementation != null) {
-        final granted =
-            await androidImplementation.requestNotificationsPermission();
+        final granted = await androidImplementation
+            .requestNotificationsPermission();
         return granted ?? false;
       }
 
       final iosImplementation = _notificationsPlugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>();
+            IOSFlutterLocalNotificationsPlugin
+          >();
       if (iosImplementation != null) {
         final granted = await iosImplementation.requestPermissions(
           alert: true,
@@ -170,7 +174,7 @@ class LocalNotificationService {
         styleInformation: BigTextStyleInformation(
           body,
           contentTitle: title,
-          summaryText: 'SampleFlow Deadline Alert',
+          summaryText: 'MySample Deadline Alert',
         ),
       );
 
@@ -240,7 +244,7 @@ class LocalNotificationService {
         styleInformation: BigTextStyleInformation(
           body,
           contentTitle: title,
-          summaryText: 'SampleFlow Deadline Alert',
+          summaryText: 'MySample Deadline Alert',
         ),
       );
 
@@ -273,9 +277,7 @@ class LocalNotificationService {
         '[LocalNotificationService] Pre-scheduled OS alarm #$id for $scheduledDate ($tzDateTime): "$title"',
       );
     } catch (e) {
-      debugPrint(
-        '[LocalNotificationService] Error scheduling alarm: $e',
-      );
+      debugPrint('[LocalNotificationService] Error scheduling alarm: $e');
     }
   }
 

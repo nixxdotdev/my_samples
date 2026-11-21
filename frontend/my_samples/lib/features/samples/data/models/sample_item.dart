@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:sample_flow/features/samples/data/utils/sample_utils.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:my_samples/features/samples/data/utils/sample_utils.dart';
 import 'sample_status.dart';
 
 class SampleItem {

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sample_flow/core/network/api_exception.dart';
-import 'package:sample_flow/core/storage/local_storage_service.dart';
+import 'package:my_samples/core/network/api_exception.dart';
+import 'package:my_samples/core/storage/local_storage_service.dart';
 
 /// Central HTTP Client powered by Dio for all remote API communications.
 class ApiClient {

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: SampleFlow Creator API
+  title: MySample Creator API
   version: 1.0.0
   description: RESTful backend API for TikTok Shop Creator & Affiliate Sample Management.
 

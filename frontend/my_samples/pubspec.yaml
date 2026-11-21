@@ -1,6 +1,6 @@
-name: sample_flow
-description: "SampleFlow - TikTok Shop Creator & Affiliate Sample Management App"
-publish_to: 'none'
+name: my_samples
+description: "MySample - TikTok Shop Creator & Affiliate Sample Management App"
+publish_to: "none"
 version: 0.1.0+1
 
 environment:
